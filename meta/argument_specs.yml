@@ -1,0 +1,27 @@
+---
+argument_specs:
+  main:
+    short_description: Install and configure OpenSSH server
+    description: |
+      Installs OpenSSH server and allows configuration of sshd_config and sshd_config.d/*.conf.
+    options:
+      sshd_config:
+        description: |
+          Contents of the sshd_config configuration file, or empty string to leave file as is
+        type: str
+        default: ""
+
+      sshd_config_d:
+        description: List of extra sshd_config.d configuration files to create
+        type: list
+        elements: dict
+        default: []
+        options:
+          name:
+            description: Name of the sshd_config.d configuration file
+            type: str
+            required: true
+          config:
+            description: Contents of the sshd_config.d configuration file
+            type: str
+            required: true
