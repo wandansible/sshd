@@ -1,0 +1,37 @@
+---
+- name: Install openssh-server
+  ansible.builtin.apt:
+    pkg: "openssh-server"
+    install_recommends: false
+    state: present
+
+- name: Configure sshd_config
+  ansible.builtin.template:
+    src: "sshd_config"
+    dest: "/etc/ssh/sshd_config"
+    owner: "root"
+    group: "root"
+    mode: "u=rw,g=r,o=r"
+  notify: reload openssh-server
+  when: sshd_config != ""
+
+- name: Create /etc/ssh/sshd_config.d
+  ansible.builtin.file:
+    path: "/etc/ssh/sshd_config.d/"
+    owner: "root"
+    group: "root"
+    mode: "u=rwx,g=rx,o=rx"
+    state: "directory"
+  when: sshd_config_d | length >= 1
+
+- name: Configure sshd_config.d files
+  ansible.builtin.template:
+    src: "sshd_config.d"
+    dest: "/etc/ssh/sshd_config.d/{{ item.name }}.conf"
+    owner: "root"
+    group: "root"
+    mode: "u=rw,g=r,o=r"
+  notify: reload openssh-server
+  loop: "{{ sshd_config_d }}"
+  loop_control:
+    label: "sshd_config.d/{{ item.name }}.conf"
