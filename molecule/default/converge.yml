@@ -46,5 +46,5 @@
 
         sshd_config_d:
           - name: change-port
-            config:
+            config: |
               Port 2222
