@@ -6,14 +6,16 @@
       ansible.builtin.include_role:
         name: "wandansible.sshd"
       vars:
-        sshd_include: >-
-          {{ "Include /etc/ssh/sshd_config.d/*.conf" if
+        sshd_modern: >-
+          {{ true if
           (ansible_distribution == "Ubuntu" and ansible_distribution_version is version('20.04', '>=')) or
           (ansible_distribution == "Debian" and ansible_distribution_version is version('11', '>='))
-          else "" }}
+          else false }}
 
         sshd_config: |
-          {{ sshd_include }}
+          {% if sshd_modern %}
+          Include /etc/ssh/sshd_config.d/*.conf
+          {% endif %}
 
           # Supported HostKey algorithms by order of preference.
           HostKey /etc/ssh/ssh_host_ed25519_key
