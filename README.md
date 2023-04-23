@@ -1,5 +1,5 @@
 Ansible role: sshd
-===================
+==================
 
 Installs OpenSSH server and allows configuration of `sshd_config` and `sshd_config.d/*.conf`.
 
